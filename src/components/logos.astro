@@ -3,6 +3,7 @@
 import { Icon } from "astro-icon/components";
 ---
 
+<!-- 
 <div class="mt-24">
   <h2 class="text-center text-slate-500">Works with your technologies</h2>
   <div class="flex gap-8 md:gap-20 items-center justify-center mt-10 flex-wrap">
@@ -14,5 +15,23 @@ import { Icon } from "astro-icon/components";
     <Icon class="size-8 md:size-16" name="simple-icons:alpinedotjs" />
     <Icon class="size-8 md:size-12" name="simple-icons:vercel" />
 
+  </div>
+</div> -->
+<style>
+  .custom-text {
+    font-size: 2rem; /* Adjust the size as needed */
+    font-weight: bold; /* Make the text bold */
+    text-align: center; /* Center the text */
+    color: #1e293b; /* Adjust the text color as needed */
+    margin: 1rem; /* Add some margin for spacing */
+  }
+</style>
+
+<div class="mt-24">
+  <h2 class="text-center text-slate-500">Works with your technologies</h2>
+  <div class="flex gap-8 md:gap-20 items-center justify-center mt-10 flex-wrap">
+    <div class="custom-text">OADR</div>
+    <div class="custom-text">OCPI</div>
+    <div class="custom-text">OCPP</div>
   </div>
 </div>
