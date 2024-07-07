@@ -1,6 +1,7 @@
-<!-- <canvas id="myChart" width="520" height="420"></canvas> -->
-<div style="width: 520px;">
-  <canvas id="myChart" width="520" height="420"></canvas>
+<div style=" width: 100%;
+            max-width: 100%;">
+  <canvas id="myChart" style="width: 100%; height:auto; min-height: 320px;"
+  ></canvas>
   <p
     id="noteText"
     style="font-size: 15px; font-style: italic; text-align: left; margin-top: 10px;">
@@ -73,6 +74,8 @@
       },
       options: {
         responsive: true,
+        maintainAspectRatio: true,
+        aspectRatio: 1.4,
         interaction: {
           mode: "index",
           intersect: false,
