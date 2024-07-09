@@ -20,19 +20,44 @@
 <script>
   import Chart from "chart.js/auto";
 
-  async function fetchHourlyRates() {
-    const response = await fetch("https://app.nerv.energy/fetch_pricing_data/");
+  async function getJwtToken() {
+    const response = await fetch("https://app.nerv.energy/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "username=testuser&password=testpassword",
+    });
+    if (!response.ok) {
+      throw new Error("Failed to get JWT token");
+    }
+    const data = await response.json();
+    return data.access_token;
+  }
+
+  async function fetchHourlyRates(token) {
+    const response = await fetch(
+      "https://app.nerv.energy/fetch_pricing_data/",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (!response.ok) {
+      throw new Error("Failed to fetch hourly rates");
+    }
     return await response.json();
   }
 
-  async function fetchDataAndRenderChart(hourlyRates) {
+  async function fetchDataAndRenderChart(hourlyRates, token) {
     const total_energy = 45.0;
     const curtailment_limit = 3.0;
-
     const response = await fetch("https://app.nerv.energy/predict/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         hourly_rates: hourlyRates,
@@ -40,6 +65,9 @@
         curtailment_limit,
       }),
     });
+    if (!response.ok) {
+      throw new Error("Failed to fetch prediction data");
+    }
     return await response.json();
   }
 
@@ -124,21 +152,6 @@
     });
   }
 
-  async function init() {
-    try {
-      const hourlyRatesResponse = await fetchHourlyRates();
-      const hourlyRates = hourlyRatesResponse.hourly_rates;
-
-      const predictionData = await fetchDataAndRenderChart(hourlyRates);
-      renderChart(hourlyRates, predictionData.generated_profile);
-
-      document.getElementById("noteText").innerHTML +=
-        ` for New York City ${getRelevantDate()}`;
-    } catch (error) {
-      console.error("Error fetching or rendering data:", error);
-    }
-  }
-
   function getRelevantDate() {
     const now = new Date();
     const currentHour = now.getHours();
@@ -159,6 +172,20 @@
         day: "numeric",
         year: "numeric",
       });
+    }
+  }
+
+  async function init() {
+    try {
+      const token = await getJwtToken();
+      const hourlyRatesResponse = await fetchHourlyRates(token);
+      const hourlyRates = hourlyRatesResponse.hourly_rates;
+      const predictionData = await fetchDataAndRenderChart(hourlyRates, token);
+      renderChart(hourlyRates, predictionData.generated_profile);
+      document.getElementById("noteText").innerHTML +=
+        ` for New York City ${getRelevantDate()}`;
+    } catch (error) {
+      console.error("Error fetching or rendering data:", error);
     }
   }
 
