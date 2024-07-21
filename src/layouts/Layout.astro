@@ -16,11 +16,10 @@ const resolvedImageWithDomain = new URL(
   Astro.site,
 ).toString();
 
-const { title } = Astro.props;
-
-const makeTitle = title
-  ? title + " | " + "Astroship"
-  : "Astroship - Starter Template for Astro with Tailwind CSS";
+const { title, description } = Astro.props;
+const defaultDescription = "Nerv Energy: energy efficient EV charging";
+const siteTitle = "Nerv Energy";
+const makeTitle = title ? `${title} | ${siteTitle}` : siteTitle;
 ---
 
 <!doctype html>
@@ -31,26 +30,39 @@ const makeTitle = title
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- <link rel="preload" as="image" href={src} alt="Hero" /> -->
     <SEO
       title={makeTitle}
-      description="Astroship is a starter website template for Astro built with TailwindCSS."
+      description={description || defaultDescription}
       canonical={canonicalURL}
       twitter={{
-        creator: "@surjithctly",
-        site: "@web3templates",
+        creator: "@freedomboi_",
+        site: "@nervenergy",
         card: "summary_large_image",
       }}
       openGraph={{
         basic: {
           url: canonicalURL,
           type: "website",
-          title: `Astroship - Starter Template for Astro`,
+          title: `Nerv Energy`,
           image: resolvedImageWithDomain,
         },
         image: {
-          alt: "Astroship Homepage Screenshot",
+          alt: "Nerv Energy",
         },
+      }}
+      extend={{
+        meta: [
+          {
+            name: "keywords",
+            content:
+              "energy, ev, electric vehicles, smart charging, der, green, ocpp, oadr, ocpi",
+          },
+          { name: "author", content: "Nerv Energy" },
+        ],
+        link: [
+          { rel: "icon", href: "/favicon.ico" },
+          { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+        ],
       }}
     />
   </head>
